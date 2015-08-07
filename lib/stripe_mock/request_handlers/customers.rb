@@ -58,7 +58,7 @@ module StripeMock
       def update_customer(route, method_url, params, headers)
         route =~ method_url
         cus = assert_existence :customer, $1, customers[$1]
-        cus.merge!(params)
+        cus.merge!(params.delete_if{|k,v| v.respond_to?(:key?) and v.key?(:data) and v[:data].nil?})
 
         if params[:source]
           new_card = get_card_by_token(params.delete(:source))
